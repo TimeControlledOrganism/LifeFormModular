@@ -195,8 +195,8 @@ struct AdditiveVibration : Module {
 	AdditiveVibration(){
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 configParam(OCT_PARAM, 4.0, 12.0, 8.0,"Octave");
-configParam(D_PARAM, 0.1, 0.9, 0.0,"Sine Width");
-configParam(V_PARAM, 0.0, 0.9, 0.0,"Sine Curve");
+configParam(D_PARAM, 0.1, 0.9, 0.5,"Sine Width");
+configParam(V_PARAM, 0.0, 0.9, 0.5,"Sine Curve");
 configParam(HARM1LVL_PARAM, 0.0, 1.0, 1.0,"1st Harmonic level");
 configParam(HARM2LVL_PARAM, 0.0, 1.0, 1.0,"2nd Harmonic level");
 configParam(HARM3LVL_PARAM, 0.0, 1.0, 1.0,"3rd Harmonic level");
@@ -213,7 +213,7 @@ configParam(RANGE_A_PARAM, 0.0, 2.0, 0.0, "Env time");
 configParam(SHAPE_A_PARAM, 0.0, 1.0, 0.0, "Env shape");
 configParam(TRIGG_A_PARAM, 0.0, 1.0, 0.0, "Env trigger");
 configParam(RISE_A_PARAM, 0.0, 1.0, 0.0, "Env rise time");
-configParam(FALL_A_PARAM, 0.0, 1.0, 0.0, "Env fall time");
+configParam(FALL_A_PARAM, 0.0, 1.0, 0.5, "Env fall time");
 configParam(CYCLE_A_PARAM, 0.0, 1.0, 0.0, "Lfo mode");
 configParam(CV_A_DEST_PARAM, 0.0, 2.0, 0.0, "Env mod destination");
 configParam(CV_A_MOD_PARAM, -0.5, 0.5, 0.0, "Env mod amount");
@@ -488,6 +488,8 @@ void process(const ProcessArgs &args) override{
     }
 	 oldPhase6 = phase6;
 	 oldDiscont6 = discont6;
+	 
+	if (inputs[V_OCT2_INPUT].isConnected()){
 	
 	float freq2A = params[OCT_PARAM].getValue() + 0.031360  +  inputs[V_OCT2_INPUT].getVoltage() + 1.0;
 
@@ -617,9 +619,13 @@ void process(const ProcessArgs &args) override{
         square6A *= -1.0f;
     }
 	 oldPhase6A = phase6A;
-	 oldDiscont6A = discont6A;	 
+	 oldDiscont6A = discont6A;
+
+	}	 
 	 		 
 
+	if (inputs[V_OCT3_INPUT].isConnected()) {
+		
 	float freq2B = params[OCT_PARAM].getValue() + 0.031360  +  inputs[V_OCT3_INPUT].getVoltage() + 1.0;
 
     if (freq2B >= log2sampleFreq) {
@@ -749,6 +755,8 @@ void process(const ProcessArgs &args) override{
     }
 	 oldPhase6B = phase6B;
 	 oldDiscont6B = discont6B;
+	 
+	}
 
 
 float osc1 = 5.0f * sin_01(saw);
@@ -800,59 +808,59 @@ if (inputs[V_OCT2_INPUT].isConnected() && inputs[V_OCT3_INPUT].isConnected()){
 	tzharmmix =  ((5.0f * sin_01(phase3) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	tzharmmixA =  ((5.0f * sin_01(phase2A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;
+	//tzharmmixA =  ((5.0f * sin_01(phase2A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;
 	 
-	 if (params[HARMMIX_PARAM].getValue() == 1.0) {
+	 if (params[HARMMIX_PARAM].getValue() == 1.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase2A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase3A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 2.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 2.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase4A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 3.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 3.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase3A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 4.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 4.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase2A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	 if (params[HARMMIX_PARAM].getValue() == 5.0) {
+	 if (params[HARMMIX_PARAM].getValue() == 5.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase3A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
-	  if (params[HARMMIX_PARAM].getValue() == 6.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 6.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase4A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
-	if (params[HARMMIX_PARAM].getValue() == 7.0) {
+	if (params[HARMMIX_PARAM].getValue() == 7.0 && inputs[V_OCT2_INPUT].isConnected()) {
 	tzharmmixA =  ((5.0f * sin_01(phase3A) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4A) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6A) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	 tzharmmixB =  ((5.0f * sin_01(phase2B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;
+	 //tzharmmixB =  ((5.0f * sin_01(phase2B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;
 	 
-	 if (params[HARMMIX_PARAM].getValue() == 1.0) {
+	 if (params[HARMMIX_PARAM].getValue() == 1.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase2B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase3B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 2.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 2.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase4B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 3.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 3.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase3B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	  if (params[HARMMIX_PARAM].getValue() == 4.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 4.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase2B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
-	 if (params[HARMMIX_PARAM].getValue() == 5.0) {
+	 if (params[HARMMIX_PARAM].getValue() == 5.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase3B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
-	  if (params[HARMMIX_PARAM].getValue() == 6.0) {
+	  if (params[HARMMIX_PARAM].getValue() == 6.0 && inputs[V_OCT3_INPUT].isConnected()) {
 	tzharmmixB =  ((5.0f * sin_01(phase4B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase5B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0))  / 3.0) ;	 
 	 }
-	if (params[HARMMIX_PARAM].getValue() == 7.0) {
+	if (params[HARMMIX_PARAM].getValue() == 7.0 && inputs[V_OCT3_INPUT].isConnected()){
 	tzharmmixB =  ((5.0f * sin_01(phase3B) * clamp((params[HARM1LVL_PARAM].getValue() + clamp(((inputs[HARM1_INPUT].getVoltage() / 10.0f) * params[HARM1MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase4B) * clamp((params[HARM2LVL_PARAM].getValue()+ clamp(((inputs[HARM2_INPUT].getVoltage() / 10.0f) * params[HARM2MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) + (5.0f * sin_01(phase6B) * clamp((params[HARM3LVL_PARAM].getValue()+ clamp(((inputs[HARM3_INPUT].getVoltage() / 10.0f) * params[HARM3MOD_PARAM].getValue()),-1.0,1.0)),0.0,1.0)) / 3.0) ;	 
 	 }
 	 
