@@ -1,0 +1,53 @@
+fun tanh_table(z) @[table(min = -24.0, max = 24.0, size = 241)] {
+  return 16.0 * tanh(z / 16.0);
+}
+
+
+fun cvToPitch(cv) {
+   return cv * 120.0 + 24.0;
+}
+
+fun change(x:real):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+
+fun calc_g(cv,sr) {
+   val pitch = cvToPitch(cv);
+   val f = 8.175798915643707*exp(0.057762265046662105*pitch);
+   val pi = 3.141592653589793;
+   val wd = 2.0*pi*f;
+	val T  = 1.0/sr;
+	val wa = (2.0/T)*tan(wd*T/2.0);
+	val g  = wa*T/2.0;
+   return g;
+}
+
+fun process(x, cv, q, sel,sr) {
+    mem z1, z2;
+   mem g,inv_den, R;
+   q = q + 0.5;
+   if(change(cv) || change(q)) {
+      g = calc_g(cv,sr);
+      R = 1.0/(2.0*(q+eps()));
+      inv_den = 1.0/(1.0 + 2.0*R*g + g*g);
+   }
+
+   val high  = (x - (2.0*R + g)*z1 - z2) * inv_den;
+	val band  = g*high + z1;
+	val low   = g*band + z2;
+   val notch = low + high;
+
+	z1 = g*high + band;
+	z2 = g*band + low;
+
+   val output =
+      if sel == 0 then low else
+      if sel == 1 then high else
+      if sel == 2 then band else
+      notch;
+   return tanh_table(output);
+}
