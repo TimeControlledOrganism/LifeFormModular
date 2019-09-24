@@ -8,5 +8,7 @@ lots of thanks to Andrew and devs,  for open sourcing and making readable code!
 
 so the plugins are just made from bits and pieces of other "classic" vcv plugs tied together.
 
-Don't expect extraordinary functions or coding, but I tried to make them "musical"
+Manual to come
+
+Containing code from : Jake Huryn, Andrew Belt, Jeremy Wentworth, Martin Lueders, Michael Hetrick.
 
