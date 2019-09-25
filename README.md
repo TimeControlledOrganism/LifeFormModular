@@ -10,5 +10,5 @@ so the plugins are just made from bits and pieces of other "classic" vcv plugs t
 
 Manual to come
 
-Containing code from : Jake Huryn, Andrew Belt, Jeremy Wentworth, Martin Lueders, Michael Hetrick.
+Containing code from : Jake Huryn, Andrew Belt, Jeremy Wentworth, Martin Lueders, Michael Hetrick,Leonardo Laguna Ruiz.
 
