@@ -118,16 +118,19 @@ struct PercussiveVibration : Module {
 	
 	float gate1 = 0.0;
 	float sample1 = 0.0;
+	
+	float sr = 44100.0f;
 
-    
+   
+	
     dsp::SchmittTrigger resetTrigger;
 
 	PercussiveVibration(){
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-Filter_process_init(processor);
 
 
+ Filter_process_init(processor);
 configParam(EXP_FM_PARAM, 0.0, 1.0, 0.0,"Pitch Enveloppe Depth");
 configParam(OCT_PARAM, 4.0, 12.0, 8.0,"Octave");
 configParam(D_PARAM, 0.1, 0.9, 0.0,"Sine shape");
@@ -156,6 +159,7 @@ configParam(ENVMOD_PARAM, -1.0, 1.0, 0.0, "Filter cutoff env modulation");
 
 void onSampleRateChange() override {
     log2sampleFreq = log2f(1.0f / APP->engine->getSampleTime()) - 0.00009f;
+	sr = APP->engine->getSampleRate();
 }
 
 void process(const ProcessArgs &args) override{
@@ -384,13 +388,14 @@ void process(const ProcessArgs &args) override{
 			
 			
 			float noise = 2.0 * random::normal();
+			
 			float oscout = 0.0;
 			
 		if (VelTrigger.process(inputs[TRIGG_A_INPUT].getVoltage())){
 		gate1 = true;
 		}
 		if(gate1) {	
-		on1.trigger(0.01);
+		on1.trigger(0.001);
 		gate1 = false;
 	};
 	
@@ -400,13 +405,17 @@ sample1 = (inputs[VEL_INPUT].getVoltage());
 	}
 	
 	float rawoscout =   crossfade((5.0f * sin_01(saw) / 5.0), (noise / 5.0), params[SOURCE_PARAM].getValue());
+	
+	float oscoutput =   crossfade((5.0f * sin_01(saw) / 5.0), (noise / 5.0), params[SOURCE_PARAM].getValue());
 					
 		     if (outputs[SIN_OUTPUT].isConnected()) { 
-			 oscout = (1.0 * (crossfade((5.0f * sin_01(saw) * (out / 5.0)), (noise * out/5.0), params[SOURCE_PARAM].getValue())));
+			 rawoscout = (1.0 * (crossfade((5.0f * sin_01(saw) * (out / 5.0)), (noise * out/5.0), params[SOURCE_PARAM].getValue())));
 			 if (inputs[VEL_INPUT].isConnected()) {	 
-			 oscout = ((1.0 * (sample1/ 10.0)) * (crossfade((5.0f * sin_01(saw) * (out / 5.0)), (noise * out/5.0), params[SOURCE_PARAM].getValue())));
+			 rawoscout = ((1.0 * (sample1/ 10.0)) * (crossfade((5.0f * sin_01(saw) * (out / 5.0)), (noise * out/5.0), params[SOURCE_PARAM].getValue())));
 			 }
 			 }
+			 
+			 rawoscout = clamp(rawoscout, -10.0, 10.0);
 			 
 			 if (outputs[VCA_ENV_OUTPUT].isConnected()) {
 		outputs[VCA_ENV_OUTPUT].setVoltage(out);
@@ -418,18 +427,19 @@ sample1 = (inputs[VEL_INPUT].getVoltage());
 		outputs[ACC_ENV_OUTPUT].setVoltage(accentout);
 			 }					 
 			 
-		float x = oscout / 10.0f;
-		float cv = params[CUTOFF_PARAM].getValue() + ((out / 5.0f) * params[ENVMOD_PARAM].getValue()) + ((inputs[CUTMOD_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD_PARAM].getValue()) + ((inputs[CUTMOD2_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD2_PARAM].getValue()) ;
+		float x = rawoscout / 10.0f;
+		oscout = clamp (rawoscout, -1.0, 1.0);
+		float cv = params[CUTOFF_PARAM].getValue() + ((out / 10.0f) * params[ENVMOD_PARAM].getValue()) + ((inputs[CUTMOD_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD_PARAM].getValue()) + ((inputs[CUTMOD2_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD2_PARAM].getValue()) ;
 		cv = clamp (cv, 0.0, 0.9);
 		float q = params[RESO_PARAM].getValue();
 	    int sel = params[MODE_PARAM].getValue(); 
-		float sr = args.sampleRate;
+		
 			 
 		float filterout = Filter_process(processor,x, cv, q, sel,sr);	 
 		filterout = clamp(filterout,-1.0,1.0);
 				
 				outputs[SIN_OUTPUT].setVoltage( filterout * 5.0);
-				outputs[OSC_OUTPUT].setVoltage( rawoscout * 5.0);
+				outputs[OSC_OUTPUT].setVoltage( oscoutput * 5.0);
 			 	
 }
 

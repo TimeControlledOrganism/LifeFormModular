@@ -276,16 +276,17 @@ float sawwave = (1.0-0.5)*((phase-d)/(1.0-d)) + 0.5 ;
 
 float saw = sinf((1.0f * M_PI * sawwave));
 
-	lfo1 = (10.0f * saw);
-outputs[OUT1_OUTPUT].setVoltage(lfo1);
-
 float input = saw;
 float output = input * (shapeA + shapeB);
 	output = output / ((std::abs(input) * shapeA) + shapeB);
+	
+	lfo1 = (10.0f * saw);
 
 if (params[EXP1_PARAM].getValue() == 1.0){
 		lfo1 = (10.0f * output);
 }
+		
+outputs[OUT1_OUTPUT].setVoltage(lfo1);
 				
 	}
 		
@@ -311,11 +312,13 @@ float output2 = input2 * (shapeA + shapeB);
 	output2 = output2 / ((std::abs(input2) * shapeA) + shapeB);
 	
 	lfo2 = (10.0f * saw2);
-outputs[OUT2_OUTPUT].setVoltage(lfo2);
+
 
 if (params[EXP2_PARAM].getValue() == 1.0){
 		lfo2 = (10.0f * output2);
 }
+
+outputs[OUT2_OUTPUT].setVoltage(lfo2);
 
 	}
 	
@@ -337,7 +340,7 @@ float sawwave3 = (1.0-0.5)*((phase3-d3)/(1.0-d3)) + 0.5 ;
 float saw3 = sinf((1.0f * M_PI * sawwave3));
 	
 	lfo3 = (10.0f * saw3);
-outputs[OUT3_OUTPUT].setVoltage(lfo3);
+
 
 float input3 = saw3;
 float output3 = input3 * (shapeA + shapeB);
@@ -346,6 +349,8 @@ float output3 = input3 * (shapeA + shapeB);
 if (params[EXP3_PARAM].getValue() == 1.0){
 		lfo3 = (10.0f * output3);
 }
+
+outputs[OUT3_OUTPUT].setVoltage(lfo3);
 			
 	}
 	
@@ -367,7 +372,7 @@ float sawwave4 = (1.0-0.5)*((phase4-d4)/(1.0-d4)) + 0.5 ;
 float saw4 = sinf((1.0f * M_PI * sawwave4));
 	
 	lfo4 = (10.0f * saw4);
-outputs[OUT4_OUTPUT].setVoltage(lfo4);
+
 
 float input4 = saw4;
 float output4 = input4 * (shapeA + shapeB);
@@ -377,6 +382,9 @@ float output4 = input4 * (shapeA + shapeB);
 if (params[EXP4_PARAM].getValue() == 1.0){
 		lfo4 = (10.0f * output4);
 }
+
+outputs[OUT4_OUTPUT].setVoltage(lfo4);
+
 		
 	}
 	
