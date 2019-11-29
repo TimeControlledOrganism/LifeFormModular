@@ -136,7 +136,7 @@ void PitchIntegrator::process(const ProcessArgs &args) {
 
 	out = inputs[IN1_INPUT+position].getNormalVoltage(0.0);
 	
-	float scaleout = 0.0f;
+	float scaleout = (inputs[IN1_INPUT+position].getNormalVoltage(0.0));
 	
 	if (params[SCALEON_PARAM].getValue()) {
 		
