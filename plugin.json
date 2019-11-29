@@ -108,15 +108,6 @@
 				"Utility",
 				"Quad"
 			]
-		},
-			{
-			"slug": "TimeExpansion",
-			"name": "TimeExpansion",
-			"description": "Expander for TimeDiktat",
-			"tags": [
-				"Utility",
-				"Quad"
-			]
 		}
 		]
 }
