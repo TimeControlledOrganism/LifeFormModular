@@ -117,3 +117,5 @@ extern Model *modelQuadSteppedOffset;
 extern Model *modelPercussiveVibration;
 extern Model *modelQuadUtility;
 extern Model *modelAdditiveVibration;
+extern Model *modelComplexOsc;
+extern Model *modelDriftgen;
