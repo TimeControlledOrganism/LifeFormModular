@@ -24,6 +24,7 @@
 			"slug": "SequenceModeler",
 			"name": "SequenceModeler",
 			"description": "Sequencer based on Fundamental SEQ3",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2019/11/29/sequence-modeler",
 			"tags": [
 				"Sequencer",
 				"Dual"
@@ -33,6 +34,7 @@
 			"slug": "PitchDiktat",
 			"name": "PitchDiktat",
 			"description": "Quantizer based on ML Quantum",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2019/11/29/pitch-diktat",
 			"tags": [
 				"Quantizer",
 				"Random"
@@ -42,6 +44,7 @@
 			"slug": "PitchIntegrator",
 			"name": "PitchIntegrator",
 			"description": "Sequential switch  based on ML switches, with sample and hold designed for pitch",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2019/11/29/pitch-integrator",
 			"tags": [
 				"Switch",
 				"Sample and hold"
@@ -60,6 +63,7 @@
 			"slug": "QuadModulator",
 			"name": "QuadModulator",
 			"description": "Quad synced LFO with skew from ramp up to ramp down through sine plus dual unity mixer",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2020/02/18/quad-modulator",
 			"tags": [
 				"LFO",
 				"Quad"
@@ -69,6 +73,7 @@
 			"slug": "ImpulseControl",
 			"name": "ImpulseControl",
 			"description": "Trigger sequencer based on Fundamental SEQ3",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2020/02/18/impulse-control",
 			"tags": [
 				"Sequencer",
 				"Dual"
@@ -78,6 +83,7 @@
 			"slug": "PercussiveVibration",
 			"name": "PercussiveVibration",
 			"description": "Synth voice based on 21Khz PalmLoop and Befaco Rampage mainly for drums",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2019/10/13/percussive-vibration",
 			"tags": [
 				"Synth voice",
 				"Drum"
@@ -96,6 +102,7 @@
 			"slug": "AdditiveVibration",
 			"name": "AdditiveVibration",
 			"description": "Additive/FM synth voice based on 21Khz PalmLoop and Befaco Rampage ",
+			"manualUrl": "https://lifeformmodular.wordpress.com/2019/10/19/additive-vibration",
 			"tags": [
 				"Synth voice"
 			]
