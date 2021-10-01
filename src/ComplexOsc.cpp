@@ -79,7 +79,7 @@ struct ComplexOsc : Module {
 		Processor_process_init(processor);
 	}
 
-	void process(const ProcessArgs &args) {
+	void process(const ProcessArgs &args) override {
 		
 		float pitch = params[OCTAVE_PARAM].getValue() + (params[CARFINE_PARAM].getValue() / 120.0) + (params[CARCOARSE_PARAM].getValue() / 12.0);
 		
