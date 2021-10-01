@@ -38,8 +38,8 @@ struct LFMTinySnapKnob : LFMTinyKnob {
 
 struct LFMSlider : app::SvgSlider {
 	LFMSlider() {
-		maxHandlePos = app::mm2px(math::Vec(0, 0).plus(math::Vec(-2.5f, 0)));
-		minHandlePos = app::mm2px(math::Vec(0, 23).plus(math::Vec(-2.5f, 0)));
+		maxHandlePos = window::mm2px(math::Vec(0, 0).plus(math::Vec(-2.5f, 0)));
+		minHandlePos = window::mm2px(math::Vec(0, 23).plus(math::Vec(-2.5f, 0)));
 		setBackgroundSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LFMSlider.svg")));
 	}
 };
@@ -69,25 +69,25 @@ struct MS : app::SvgSwitch {
 
 struct JackPort : SVGPort {
 	JackPort() {
-		setSVG(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Jack.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Jack.svg")));
 	}
 };
 
 struct OutJackPort : SVGPort {
 	OutJackPort() {
-		setSVG(APP->window->loadSvg(asset::plugin(pluginInstance, "res/OutJack.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/OutJack.svg")));
 	}
 };
 
 struct MiniJackPort : SVGPort {
 	MiniJackPort() {
-		setSVG(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MiniJack.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MiniJack.svg")));
 	}
 };
 
 struct InJackPort : SVGPort {
 	InJackPort() {
-		setSVG(APP->window->loadSvg(asset::plugin(pluginInstance, "res/InJack.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/InJack.svg")));
 	}
 };
 
