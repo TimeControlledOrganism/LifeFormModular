@@ -7,7 +7,7 @@ using namespace rack;
 
 extern Plugin *pluginInstance;
 
-struct LFMKnob : RoundKnob {
+struct LFMKnob : SvgKnob {
 	LFMKnob() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LFMKnob.svg")));
 		minAngle = -0.68*M_PI;
@@ -15,7 +15,7 @@ struct LFMKnob : RoundKnob {
 	}
 };
 
-struct LFMTinyKnob : RoundKnob {
+struct LFMTinyKnob : SvgKnob {
 	LFMTinyKnob() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LFMTinyKnob.svg")));
 		minAngle = -0.68*M_PI;
