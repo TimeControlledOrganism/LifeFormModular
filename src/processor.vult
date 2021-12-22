@@ -1,0 +1,121 @@
+fun upsample(y1){
+mem y0;
+    val p1 = 1.0 / 4.0 * (3.0 * y0+y1);
+    val p2 = (y0 + y1) / 2.0;
+    val p3 = 1.0 / 4.0 * (y0 + 3.0 * y1);
+    y0 = y1;
+    return p1, p2, p3;
+}
+
+fun pd(ph:real, d:real, v:real) {
+	
+val pd = ph;
+	
+  if (ph < d) {
+  
+   pd = (v * ph) / d;
+   
+  }
+   
+  else
+	  
+  pd = (1.0 - v) * ((ph - d)/(1.0 - d)) + v;
+  
+  return pd;
+
+}
+
+fun modulsine (pdist:real) {
+	val mastersinus = sin((2.0 * pi() * pdist));
+	return mastersinus;
+}	
+
+fun sine (pdist:real, fb:real, fm:real) {
+	val sinus = sin((2.0 * pi() * pdist) + (((fb * 10.0) / 3.0) * fm));
+	return sinus;
+}	
+
+fun softsat(x:real, clipamt)  {
+  //return tanh(1.6 * x);
+  return clip(x * clipamt * 5.0, -1.0, 1.0);
+}
+
+
+
+fun process(in1:real, in2:real, in3:real, in4:real, in5:real, in6:real, in7:real, in8:real, in9:real) {
+	
+	
+	val phase = in5;
+	
+	val clipamt = 1.0;
+	
+   val d = in2;
+   val v = in3;
+   
+   val phasedist = pd(phase,d,v);
+   
+   val p4 = modulsine(phasedist);
+   
+ 
+   
+   val p1, p2, p3 = upsample(p4);
+   
+    val _ = filter:FIR.skip(p1);
+    val _ = filter:FIR.skip(p2);
+    val _ = filter:FIR.skip(p3);
+    val o4 = filter:FIR.do(p4);
+	
+   
+   val fb = in4;
+     
+   val fm = o4;
+   
+   
+   val phase2 = in1;
+	
+   val d2 =  in6;
+   val v2 = in7;
+   
+   val phasedist2 = pd(phase2, d2, v2);
+   
+   val s4 = sine(phasedist2, fb, fm);
+   
+   val s1, s2, s3 = upsample(s4);
+    val _ = slavefilter:FIR.skip(s1);
+    val _ = slavefilter:FIR.skip(s2);
+    val _ = slavefilter:FIR.skip(s3);
+    val so4 = slavefilter:FIR.do(s4);
+	
+	val satso4 = 0.0;
+	
+	 val mix = in8;
+	 
+	val mixosc = in9; 
+	 
+	val mixclip = ((1.0 - mixosc) * so4) + (mixosc * o4);
+	 
+	if (mix > 0.0) {
+   
+      val satmaster = softsat(mixclip, clipamt);
+   val sat1, sat2, sat3 = upsample(satmaster);
+    val _ = satfilter:FIR.skip(sat1);
+    val _ = satfilter:FIR.skip(sat2);
+    val _ = satfilter:FIR.skip(sat3);
+     satso4 = satfilter:FIR.do(satmaster);
+	
+	}
+		
+
+   
+   val out3 = so4;
+   
+   val out1 = satso4;
+   
+   val out5 = mixclip;
+   
+   val out6 = o4;
+   
+   
+      return out1, out3, out5, out6;
+}
+

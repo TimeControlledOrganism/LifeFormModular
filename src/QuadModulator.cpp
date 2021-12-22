@@ -420,8 +420,10 @@ outputs[OUT4_OUTPUT].setVoltage(lfo4);
 	outputs[STEPLFO6_OUTPUT].setVoltage(sample6);
 	outputs[STEPLFO7_OUTPUT].setVoltage(sample7);
 	outputs[STEPLFO8_OUTPUT].setVoltage(sample8);
-	}
+	//}
+	
 
+}
 };
 
 

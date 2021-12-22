@@ -114,11 +114,17 @@ void TimeDiktat::process(const ProcessArgs &args)  {
 	bool gpulse = gatePulse.process(1.0 / args.sampleRate);
 
 	outputs[CLOCKMULT16_OUTPUT].setVoltage(gpulse ? 10.0 : 0.0);
+	float sixteenth = (gpulse ? 10.0 : 0.0);
 	outputs[CLOCKMULT8_OUTPUT].setVoltage(gpulse && (stepCount % 2 == 0)  ? 10.0 : 0.0 );
+	float eighth = (gpulse && (stepCount % 2 == 0)  ? 10.0 : 0.0 );
 	outputs[CLOCKMULT4_OUTPUT].setVoltage(gpulse && (stepCount % 4 == 0) ? 10.0 : 0.0);
+	float fourth = (gpulse && (stepCount % 4 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKMULT2_OUTPUT].setVoltage(gpulse && (stepCount % 8 == 0) ? 10.0 : 0.0);
+	float half = (gpulse && (stepCount % 8 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKMULT1_OUTPUT].setVoltage(gpulse && (stepCount % 16 == 0) ? 10.0 : 0.0);
+	float measure = (gpulse && (stepCount % 16 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKDIV2_OUTPUT].setVoltage(gpulse && (stepCount % 32 == 0) ? 10.0 : 0.0);
+	float two = (gpulse && (stepCount % 32 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKDIV4_OUTPUT].setVoltage(gpulse && (stepCount % 64 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKDIV8_OUTPUT].setVoltage(gpulse && (stepCount % 128 == 0) ? 10.0 : 0.0);
 	outputs[CLOCKDIV16_OUTPUT].setVoltage(gpulse && (stepCount % 256 == 0) ? 10.0 : 0.0);
@@ -128,6 +134,29 @@ void TimeDiktat::process(const ProcessArgs &args)  {
 	lights[RUNNING_LIGHT].value = (running);
 	lights[RESET_LIGHT].setSmoothBrightness(rpulse && (stepCount % 1 == 0) ? 10.0 : 0.0, args.sampleTime);
 	lights[BLINK_LIGHT].setSmoothBrightness(gpulse && (stepCount % 4 == 0) ? 10.0 : 0.0, args.sampleTime);
+	
+	
+	
+	
+	if (rightExpander.module && rightExpander.module->model == modelTimeExpansion) {
+			// Get message from right expander
+			float *message = (float*) rightExpander.module->leftExpander.producerMessage;
+			// Write message
+			for (int i = 0; i < 8; i++) {
+				//message[i] = inputs[i].getVoltage() / 10.f;
+			//}
+			message[0] = sixteenth;
+			message[1] = eighth;
+			message[2] = fourth;
+			message[3] = half;
+			message[4] = measure;
+			message[5] = two;
+			
+			// Flip messages at the end of the timestep
+			rightExpander.module->leftExpander.messageFlipRequested = true;
+		}
+		
+}
 	
 }	
 

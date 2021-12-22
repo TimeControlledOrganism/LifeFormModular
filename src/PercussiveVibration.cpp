@@ -389,7 +389,7 @@ void process(const ProcessArgs &args) override{
 			
 			float noise = 2.0 * random::normal();
 			
-			float oscout = 0.0;
+			//float oscout = 0.0;
 			
 		if (VelTrigger.process(inputs[TRIGG_A_INPUT].getVoltage())){
 		gate1 = true;
@@ -428,7 +428,7 @@ sample1 = (inputs[VEL_INPUT].getVoltage());
 			 }					 
 			 
 		float x = rawoscout / 10.0f;
-		oscout = clamp (rawoscout, -1.0, 1.0);
+		//oscout = clamp (rawoscout, -1.0, 1.0);
 		float cv = params[CUTOFF_PARAM].getValue() + ((out / 10.0f) * params[ENVMOD_PARAM].getValue()) + ((inputs[CUTMOD_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD_PARAM].getValue()) + ((inputs[CUTMOD2_INPUT].getVoltage() / 10.0f) * params[CUTOFFMOD2_PARAM].getValue()) ;
 		cv = clamp (cv, 0.0, 0.9);
 		float q = params[RESO_PARAM].getValue();
