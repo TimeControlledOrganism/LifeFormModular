@@ -1,0 +1,10 @@
+<svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" width="32.68" height="33.17" viewBox="0 0 32.68 33.17">
+  <ellipse cx="16.18" cy="16.64" rx="7.5" ry="7.02"/>
+  <ellipse cx="16.34" cy="16.59" rx="12.84" ry="13.09" style="fill: #f2f2f2;stroke: #000;stroke-miterlimit: 10;stroke-width: 7px"/>
+  <polygon points="16.18 2.67 5.36 7.86 2.68 19.49 10.17 28.83 22.19 28.83 29.68 19.49 27.01 7.86 16.18 2.67" style="fill: #fff;stroke: #404040;stroke-miterlimit: 10"/>
+  <ellipse cx="16.18" cy="16.23" rx="11.61" ry="11.25" style="fill: #404040"/>
+  <ellipse cx="16.18" cy="16.23" rx="10.8" ry="10.46" style="fill: #202020"/>
+  <ellipse cx="16.18" cy="16.23" rx="10.26" ry="9.94" style="fill: #feffff"/>
+  <path d="M30.74,21.18h1.52v3.48c0,.7-.24,1.26-.54,1.26h-.44c-.3,0-.54-.56-.54-1.26h0V21.18Z" transform="translate(-15.32 -15.44)"/>
+  <path d="M32.26,21.41H30.74V19.09c0-.46.24-.84.54-.84h.44c.3,0,.54.38.54.84h0v2.32Z" transform="translate(-15.32 -15.44)" style="fill: #010000"/>
+</svg>
